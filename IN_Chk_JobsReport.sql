@@ -2,6 +2,7 @@
 SELECT 
       [sJOB].[name] AS [JobName]
 	, [sCAT].[name] AS [JobCategory]
+	, [sLGN].name AS [OwnerJob]
 	, [sJOB].[date_modified] AS [JobLastModifiedOn]
 	, CASE [sJOB].[enabled]
         WHEN 1 THEN 'Yes'
@@ -79,4 +80,6 @@ FROM
         AND [sJOBH].[RowNumber] = 1
     LEFT JOIN [msdb].[dbo].[sysschedules] AS [sSCH]
         ON [sJOBSCH].[schedule_id] = [sSCH].[schedule_id]
+	LEFT JOIN sys.syslogins AS [sLGN] 
+		ON [sJOB].owner_sid = [sLGN].sid 
 ORDER BY [JobName]

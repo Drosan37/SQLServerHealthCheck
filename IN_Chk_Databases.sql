@@ -1,6 +1,6 @@
 -- Check database status (comp level, access, recovery model, ecc)
 SELECT 
-	name AS 'DatabaseName'
+	sd.name AS 'DatabaseName'
 	, CASE compatibility_level
 		WHEN 150 THEN 'SQL Server 2019'
 		WHEN 140 THEN 'SQL Server 2017'
@@ -22,6 +22,10 @@ SELECT
 		WHEN 0 THEN 'AutoUpdate Disabled'
 		WHEN 1 THEN 'AutoUpdate Enabled'
 	END AS StatisticsAutoUpdate
-FROM sys.databases
+	, sl.name AS LoginName
+	, 'USE [' + sd.name + ']; EXEC sp_changedbowner ''sa'';' AS CmdName
+FROM sys.databases sd
+LEFT JOIN sys.syslogins sl
+	ON sd.owner_sid = sl.sid
 WHERE
-	name NOT IN ('master','model','msdb','tempdb');
+	sd.name NOT IN ('master','model','msdb','tempdb');
