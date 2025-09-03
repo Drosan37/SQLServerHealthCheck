@@ -10,5 +10,4 @@ SELECT
 	, SUM(work_queue_count) AS 'RequestWaitingForThreads' 
 	, SUM(current_workers_count) AS 'AssociatedWorkers'
 FROM sys.dm_os_Schedulers 
-
 WHERE status='VISIBLE ONLINE'
